@@ -374,6 +374,11 @@ select.input { padding-right: 32px; }
 .center-card .chip { margin: 0 auto 18px; }
 .center-card p { color: var(--muted); margin-top: 10px; }
 .center-card .btn { margin-top: 22px; }
+.score-card { margin: 22px auto 0; max-width: 460px; text-align: left; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.score-head { padding: 12px 16px; background: var(--purple-bg); color: #4c1d95; font-weight: 600; font-size: 14px; }
+.score-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 14px; }
+.score-row b { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.score-row.total { background: #F8FAFD; font-weight: 600; }
 .result-box { display: inline-flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
 
 /* ---------- Оверлейлер ---------- */
