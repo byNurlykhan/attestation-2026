@@ -473,7 +473,25 @@
     sig() {
       const s = E.st;
       if (!s) return '';
-      return [E.view, s.stage1.start ? 1 : 0, s.stage1.end ? 1 : 0, s.stage2.start ? 1 : 0, s.stage2.end ? 1 : 0, E.tasks.length, E.qs.length, s.result ? 1 : 0].join('|');
+      return [E.view, s.stage1.start ? 1 : 0, s.stage1.end ? 1 : 0, s.stage2.start ? 1 : 0, s.stage2.end ? 1 : 0, E.tasks.length, E.qs.length, s.result ? 1 : 0,
+        s.result1 ? s.result1.items.map(i => i.score).join(',') : ''].join('|');
+    },
+
+    // 1-кезең балдары (баптауда «Нәтижені қатысушыға көрсету» = иә болса)
+    s1ResultHtml() {
+      const r = E.st && E.st.result1;
+      if (!r || !r.items.length) return '';
+      const ru = window.I18n.lang === 'ru';
+      const rows = r.items.map(i => {
+        const title = (ru ? i.title_ru : i.title_kz) || T('s1.task', { n: i.no });
+        const short = title.indexOf(':') > 0 ? title.slice(title.indexOf(':') + 1).trim() : title;
+        return '<div class="score-row"><span>' + esc(i.no + '. ' + short) + '</span><b>' +
+          (i.score === null ? '<span class="muted">' + esc(T('s1.notGraded')) + '</span>' : esc(i.score + ' / 5')) + '</b></div>';
+      }).join('');
+      return '<div class="score-card"><div class="score-head">' + esc(T('s1.resultTitle')) + '</div>' + rows +
+        '<div class="score-row total"><span>' + esc(T('s1.resultTotal')) + '</span><b>' + esc(r.total + ' / ' + r.max) +
+        (r.graded < r.items.length ? ' <span class="muted">(' + esc(T('s1.gradedOf', { g: r.graded, n: r.items.length })) + ')</span>' : '') +
+        '</b></div></div>';
     },
 
     /* ---------- Сервермен алмасу ---------- */
@@ -787,7 +805,8 @@
       }
       if (st.stage1.end) {
         body.innerHTML = this.centerCard('circle-check', 'c-green', T('s1.done'), T('s1.doneText'),
-          st.stage2.end ? '' : '<button class="btn btn-primary" id="toS2"><i data-lucide="clipboard-check"></i>' + esc(T('home.go2')) + '</button>');
+          this.s1ResultHtml() +
+          (st.stage2.end ? '' : '<button class="btn btn-primary" id="toS2"><i data-lucide="clipboard-check"></i>' + esc(T('home.go2')) + '</button>'));
         const b = $('#toS2');
         if (b) b.addEventListener('click', () => this.go('stage2'));
         return;
@@ -940,7 +959,7 @@
         const res = st.result
           ? '<div class="result-box"><span class="pill blue">' + esc(T('s2.result', { a: st.result.scoreA, ta: st.result.totalA, b: st.result.scoreB, tb: st.result.totalB })) + '</span></div>'
           : '<p>' + esc(T('s2.resultHidden')) + '</p>';
-        body.innerHTML = this.centerCard('trophy', 'c-green', T('done.title'), T('done.text'), res);
+        body.innerHTML = this.centerCard('trophy', 'c-green', T('done.title'), T('done.text'), res + this.s1ResultHtml());
         return;
       }
       if (!E.qs.length) { body.innerHTML = ''; return; }
