@@ -71,20 +71,11 @@
             <input id="orgInput" class="input" type="text" readonly tabindex="-1">
           </div>
 
-          <div class="field">
-            <label for="codeInput" data-i18n="f.code"></label>
-            <div class="input-wrap">
-              <input id="codeInput" class="input" type="password" inputmode="numeric" maxlength="4"
-                     autocomplete="off" data-i18n-ph="f.code.ph">
-              <button type="button" class="in-icon" id="toggleCode" data-i18n-title="f.code.show"><i data-lucide="eye"></i></button>
-            </div>
-          </div>
-
           <div id="loginError" class="alert error hidden" style="margin-bottom:16px">
             <i data-lucide="triangle-alert"></i><span></span>
           </div>
 
-          <button id="loginBtn" type="submit" class="btn btn-primary btn-block">
+          <button id="loginBtn" type="submit" class="btn btn-primary btn-block" disabled>
             <i data-lucide="log-out" style="transform:scaleX(-1)"></i><span data-i18n="login.btn">Кіру</span>
           </button>
         </form>
@@ -105,6 +96,7 @@
 
   <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="config.js"></script>
+  <script src="names.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
