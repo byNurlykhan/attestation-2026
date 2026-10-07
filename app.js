@@ -32,17 +32,24 @@
   async function api(action, data, tokenKey) {
     if (!apiReady()) throw mkErr('no_config');
     const body = JSON.stringify(Object.assign({ action: action, token: store.get(tokenKey || TOKEN_KEY) }, data || {}));
+    // Сервер жауап бермесе, бет «қатып» қалмауы үшін 30 секундтық шек
+    const ctl = window.AbortController ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => ctl.abort(), 30000) : null;
     let res;
+    let j;
     try {
       res = await fetch(CFG.API_URL, {
         method: 'POST', body: body, redirect: 'follow', cache: 'no-store',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        signal: ctl ? ctl.signal : undefined
       });
+      try { j = await res.json(); } catch (e) { throw mkErr('server_error'); }
     } catch (e) {
+      if (e && e.code) throw e;
       throw mkErr('network');
+    } finally {
+      if (timer) clearTimeout(timer);
     }
-    let j;
-    try { j = await res.json(); } catch (e) { throw mkErr('server_error'); }
     if (!j.ok) throw Object.assign(mkErr(j.error || 'unknown'), j);
     return j;
   }
@@ -161,7 +168,9 @@
     async init() {
       if (store.get(TOKEN_KEY)) { location.replace('exam.html'); return; }
       const name = $('#nameInput');
-      const code = $('#codeInput');
+
+      // Тізім бірден: алдымен сайттағы тізім/браузер кэші, сосын сервердегі нұсқамен фондық жаңарту
+      this.setList(this.cachedList());
 
       const setOrg = () => { $('#orgInput').value = T('app.org'); this.fillSel(); };
       setOrg();
@@ -188,23 +197,33 @@
       }, 150));
       name.addEventListener('focus', () => { if (!this.sel && name.value) this.search(name.value); });
 
-      code.addEventListener('input', () => { code.value = code.value.replace(/\D/g, '').slice(0, 4); });
-      $('#toggleCode').addEventListener('click', () => {
-        const show = code.type === 'password';
-        code.type = show ? 'text' : 'password';
-        $('#toggleCode').innerHTML = '<i data-lucide="' + (show ? 'eye-off' : 'eye') + '"></i>';
-        icons();
-      });
-
       $('#loginForm').addEventListener('submit', e => { e.preventDefault(); this.submit(); });
 
+      // Фондық сұраныс серверді де «оятады», сондықтан кіру батырмасы тез жауап береді
       try {
         const r = await api('names');
-        this.list = (r.list || []).map(x => Object.assign(x, { norm: norm(x.name) }));
+        if (r.list && r.list.length) {
+          this.setList(r.list);
+          try { localStorage.setItem('nlrk_names', JSON.stringify(r.list)); } catch (e) { /* */ }
+        }
         $('#closedBanner').classList.toggle('hidden', !!r.sessionOpen);
       } catch (err) {
-        this.showError(errText(err));
+        if (!this.list.length) this.showError(errText(err));
       }
+    },
+
+    cachedList() {
+      try {
+        const c = JSON.parse(localStorage.getItem('nlrk_names') || 'null');
+        if (c && c.length) return c;
+      } catch (e) { /* */ }
+      return (window.NAMES_FALLBACK || []).map(a => ({ name: a[0], dept_kz: a[1], position_kz: a[2], dept_ru: a[3], position_ru: a[4] }));
+    },
+
+    setList(list) {
+      this.list = (list || []).map(x => Object.assign({}, x, { norm: norm(x.name) }));
+      if (this.sel) this.sel = this.list.find(x => x.name === this.sel.name) || null;
+      this.fillSel();
     },
 
     search(q) {
@@ -254,12 +273,13 @@
       $('#nameInput').classList.remove('invalid');
       this.fillSel();
       this.close();
-      $('#codeInput').focus();
+      $('#loginBtn').focus();
     },
 
     fillSel() {
       $('#deptInput').value = this.sel ? personField(this.sel, 'dept') : '';
       $('#posInput').value = this.sel ? personField(this.sel, 'position') : '';
+      $('#loginBtn').disabled = !this.sel;
     },
 
     showError(msg) {
@@ -271,20 +291,19 @@
 
     async submit() {
       this.showError('');
-      const code = $('#codeInput').value.trim();
       if (!this.sel) { $('#nameInput').classList.add('invalid'); this.showError(T('err.select_name')); return; }
-      if (!/^\d{4}$/.test(code)) { this.showError(T('err.code_format')); return; }
       const btn = $('#loginBtn');
       btn.disabled = true;
       btn.querySelector('span').textContent = T('login.loading');
       try {
-        const r = await api('login', { name: this.sel.name, code: code, ua: navigator.userAgent });
+        const r = await api('login', { name: this.sel.name });
         store.set(TOKEN_KEY, r.token);
+        // Емтихан беті серверді қайта күтпей, осы деректермен бірден ашылады
+        store.set('nlrk_boot', JSON.stringify({ state: r.state, tasks: r.tasks, questions: r.questions, at: Date.now() }));
         location.replace('exam.html');
       } catch (err) {
         if (err.code === 'session_closed') $('#closedBanner').classList.remove('hidden');
         this.showError(errText(err));
-        $('#codeInput').value = '';
         btn.disabled = false;
         btn.querySelector('span').textContent = T('login.btn');
       }
@@ -343,8 +362,21 @@
 
     async refreshFull(first) {
       try {
-        const sentAt = Date.now();
-        const r = await api('state', { full: true });
+        let sentAt = Date.now();
+        let r = null;
+        // Кіру кезінде алынған деректер (1 минуттан ескі емес болса) — серверді күтпей бірден көрсетеміз
+        if (first) {
+          try {
+            const boot = JSON.parse(store.get('nlrk_boot') || 'null');
+            store.set('nlrk_boot', null);
+            if (boot && boot.state && Date.now() - boot.at < 60000) {
+              boot.state.now += Date.now() - boot.at;   // сағат айырмасы дұрыс болуы үшін
+              r = boot;
+              sentAt = boot.at;
+            }
+          } catch (e) { /* */ }
+        }
+        if (!r) r = await api('state', { full: true });
         this.load(r, sentAt);
         if (first) {
           const st = E.st;
