@@ -1,103 +1,795 @@
 <!doctype html>
 <html lang="kk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Платформаға кіру · ҚР ҰК Аттестация</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&subset=latin,cyrillic,cyrillic-ext&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Аттестация · ҚР Ұлттық кітапханасы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&subset=latin,cyrillic,cyrillic-ext&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#2563EB;--primary-h:#1D4ED8;--bg:#F4F7FC;--card:#fff;--border:#E5EAF2;--text:#0F172A;--muted:#64748B;
+--blue-bg:#EAF1FF;--green:#16A34A;--green-bg:#E7F7EE;--red:#DC2626;--red-bg:#FDECEC;--amber:#F59E0B;--amber-bg:#FFF4DE;--purple-bg:#F1EAFE;
+--shadow:0 1px 2px rgba(15,23,42,.04),0 4px 16px rgba(15,23,42,.06)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.5;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+h1{font-size:26px;font-weight:700;margin:0}h2{font-size:20px;font-weight:600;margin:0}h3{font-size:15px;font-weight:600;margin:0}p{margin:0}
+.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:13px}
+svg.i{width:18px;height:18px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+/* жоғарғы панель */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;height:64px;padding:0 24px;color:#fff;background:linear-gradient(90deg,#1D4ED8,#3B82F6)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;flex:1;min-width:0}
+.brand .logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.brand small{display:block;font-weight:500;opacity:.85;font-size:12px}
+.lang{display:inline-flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.18)}
+.lang button{border:0;background:transparent;color:#fff;height:28px;padding:0 10px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer}
+.lang button.on{background:#fff;color:var(--primary)}
+.timer{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:10px;background:#fff;color:var(--primary);font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{color:#b45309}.timer.danger{color:var(--red)}
+.who{text-align:right;line-height:1.2;max-width:280px}.who b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.who span{font-size:12px;opacity:.85}
+.dot{width:8px;height:8px;border-radius:50%;background:#86efac;box-shadow:0 0 0 3px rgba(134,239,172,.3)}
+/* мазмұн */
+main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:24px}
+.card+.card{margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;border-radius:10px;border:1px solid transparent;font-weight:600;cursor:pointer;background:#fff}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover:not(:disabled){background:var(--primary-h)}
+.btn-outline{border-color:var(--border)}.btn-outline:hover:not(:disabled){background:#f8fafc}
+.btn:disabled{opacity:.5;cursor:not-allowed}.btn-block{width:100%}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;position:relative}
+.field label{font-size:13px;font-weight:500}
+.input{height:44px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none;width:100%}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.input[readonly]{background:#F1F5F9;color:#334155}
+.hint{font-size:12px;color:var(--muted)}
+.alert{padding:12px 14px;border-radius:10px;font-size:14px;font-weight:500;margin-bottom:14px}
+.alert.err{background:var(--red-bg);color:#991b1b}.alert.info{background:var(--blue-bg);color:#1e40af}.alert.ok{background:var(--green-bg);color:#166534}
+.ac{position:absolute;top:100%;left:0;right:0;margin-top:4px;z-index:30;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);max-height:300px;overflow:auto;padding:6px}
+.ac div{padding:8px 10px;border-radius:8px;cursor:pointer}.ac div.on,.ac div:hover{background:var(--blue-bg)}.ac small{display:block;color:var(--muted)}
+.login{max-width:520px;margin:20px auto}
+/* ережелер */
+.rules{margin:16px 0;padding-left:20px}.rules li{margin:6px 0}
+.agree{display:flex;gap:10px;align-items:center;padding:14px;border-radius:12px;background:var(--blue-bg);font-weight:600;cursor:pointer;margin:16px 0}
+.agree input{width:20px;height:20px}
+/* 1-кезең */
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.step{border:1px solid var(--border);background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:600}
+.step.on{border-color:var(--primary);background:var(--blue-bg);color:var(--primary)}.step.done{color:var(--green)}
+.task{padding:16px;border-radius:12px;background:#F8FAFD;border:1px solid var(--border);margin:12px 0;user-select:none;-webkit-user-select:none}
+.crit{padding:10px 14px;border-radius:12px;background:var(--purple-bg);color:#4c1d95;font-size:13.5px;white-space:pre-line;margin-bottom:12px;user-select:none}
+textarea.ans{width:100%;min-height:280px;resize:vertical;padding:14px;border-radius:12px;border:1px solid var(--border);outline:none;line-height:1.6}
+textarea.ans:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.meta{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.meta .over{color:var(--red)}.meta .ok{color:var(--green)}
+.row{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}.row .sp{flex:1}
+/* тест */
+.q{font-size:17px;font-weight:600;margin:10px 0 16px;user-select:none}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;user-select:none}
+.opt b{width:30px;height:30px;border-radius:8px;background:#F1F5F9;display:grid;place-items:center;flex-shrink:0}
+.opt.sel{border-color:var(--primary);background:var(--blue-bg)}.opt.sel b{background:var(--primary);color:#fff}
+.opt.good{border-color:var(--green);background:var(--green-bg)}.opt.good b{background:var(--green);color:#fff}
+.opt.bad{border-color:var(--red);background:var(--red-bg)}.opt.bad b{background:var(--red);color:#fff}
+.opt.ro{cursor:default}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;margin-top:16px}
+.grid button{height:34px;border-radius:8px;border:1px solid var(--border);background:#fff;font-weight:600;font-size:13px;cursor:pointer}
+.grid .a{background:var(--primary);color:#fff;border-color:var(--primary)}.grid .f{background:var(--amber-bg);border-color:var(--amber)}
+.grid .a.f{box-shadow:inset 0 -4px 0 var(--amber)}.grid .cur{outline:2px solid var(--text)}
+.flag.on{background:var(--amber-bg);border-color:var(--amber)}
+/* нәтиже */
+.score{font-size:44px;font-weight:700;color:var(--primary);margin:8px 0}
+.rev{margin-top:16px}.rev .qn{font-weight:600;margin:18px 0 8px}
+.na{display:inline-block;padding:2px 10px;border-radius:999px;background:#F1F5F9;color:var(--muted);font-size:12.5px;font-weight:600}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+/* оверлейлер */
+.ov{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:20px;background:rgba(15,30,80,.85)}
+.ov.soft{background:rgba(15,23,42,.45);z-index:1000}
+.ov .card{max-width:460px;width:100%;text-align:center}
+.ov .ico{width:60px;height:60px;border-radius:16px;margin:0 auto 14px;display:grid;place-items:center;background:var(--red-bg);color:var(--red)}
+.ov .ico svg{width:28px;height:28px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 12px;border-radius:10px;background:#F8FAFD;border:1px solid var(--border);margin-top:8px;font-size:14px;text-align:left}
+.kv span:first-child{color:var(--muted)}
+.pin{display:flex;gap:8px;margin-top:16px}.pin .input{text-align:center;letter-spacing:.3em;font-weight:700}
+.toasts{position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:2147483600;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 16px;border-radius:12px;background:var(--text);color:#fff;font-weight:500;font-size:14px;box-shadow:var(--shadow)}
+.toast.warn{background:#92400e}.toast.ok{background:#166534}
+.loading{text-align:center;padding:60px 0;color:var(--muted)}
+body.exam{user-select:none;-webkit-user-select:none}body.exam textarea,body.exam input{user-select:text;-webkit-user-select:text}
+</style>
 </head>
-<body data-page="login">
+<body>
+<header class="top">
+  <div class="brand"><span class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span>
+    <div><span data-t="app.org"></span><small data-t="app.sub"></small></div></div>
+  <span id="proctorOn" class="dot hidden" data-tt="top.proctor"></span>
+  <div id="timer" class="timer hidden"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span id="timerText">—</span></div>
+  <div class="lang"><button data-lang="kz">ҚАЗ</button><button data-lang="ru">РУС</button></div>
+  <div class="who hidden" id="who"><b id="whoName"></b><span id="whoPos"></span></div>
+</header>
 
-  <div class="login-page">
-    <aside class="login-hero">
-      <div class="brand">
-        <div class="brand-logo"><i data-lucide="book-open"></i></div>
-        <div>
-          <div class="brand-name" data-i18n="app.short">ҚР ҰК</div>
-          <div class="brand-sub" data-i18n="app.sub">Аттестация</div>
-        </div>
-      </div>
-      <h1 data-i18n="login.hero.title">Қызметкерлерді аттестаттау</h1>
-      <p class="lead" data-i18n="login.hero.text"></p>
-      <ul class="hero-feats">
-        <li><span class="chip"><i data-lucide="clipboard-check"></i></span><span data-i18n="login.hero.f1"></span></li>
-        <li><span class="chip"><i data-lucide="shield-check"></i></span><span data-i18n="login.hero.f2"></span></li>
-        <li><span class="chip"><i data-lucide="clock"></i></span><span data-i18n="login.hero.f3"></span></li>
-      </ul>
-      <div class="hero-date"><i data-lucide="calendar"></i><span data-i18n="app.dates"></span></div>
-    </aside>
+<main id="view"><div class="loading">…</div></main>
 
-    <main class="login-main">
-      <div class="login-top">
-        <div class="lang-switch" role="group" aria-label="Тіл / Язык">
-          <button type="button" data-lang="kz">ҚАЗ</button>
-          <button type="button" data-lang="ru">РУС</button>
-        </div>
-      </div>
+<!-- Экран құлпы -->
+<div id="lockOv" class="ov hidden"><div class="card">
+  <div class="ico"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+  <h2 data-t="lock.title"></h2>
+  <p style="margin-top:8px" data-t="lock.text"></p>
+  <p class="small muted" style="margin-top:4px" id="lockAlt"></p>
+  <div class="kv"><span data-t="lock.type"></span><b id="lockType"></b></div>
+  <div class="kv"><span data-t="lock.time"></span><b id="lockTime"></b></div>
+  <div class="kv" style="background:var(--red-bg);border-color:#fbc7cf;color:var(--red)"><span id="lockCount"></span></div>
+  <form class="pin" id="pinForm" autocomplete="off"><input class="input" id="pinInput" type="password" inputmode="numeric" maxlength="8" data-ph="lock.pin"><button class="btn btn-primary" id="pinBtn" data-t="lock.unlock"></button></form>
+  <div id="pinErr" class="alert err hidden" style="margin:10px 0 0"></div>
+  <p class="small muted" style="margin-top:12px" data-t="lock.note"></p>
+</div></div>
+<!-- Сессия тоқтатылды -->
+<div id="haltOv" class="ov hidden"><div class="card">
+  <div class="ico"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg></div>
+  <h2 data-t="halt.title"></h2><p style="margin-top:8px" data-t="halt.text"></p>
+</div></div>
+<!-- Толық экранға оралу -->
+<div id="fsOv" class="ov hidden"><div class="card">
+  <h2 data-t="fs.title"></h2><p style="margin:8px 0 18px" data-t="fs.text"></p>
+  <button class="btn btn-primary" id="fsBtn" data-t="fs.btn"></button>
+  <div id="fsErr" class="alert err hidden" style="margin:12px 0 0"></div>
+</div></div>
+<!-- Екінші қойынды / мобильді -->
+<div id="msgOv" class="ov hidden"><div class="card"><h2 id="msgTitle"></h2><p style="margin-top:8px" id="msgText"></p></div></div>
+<!-- Растау терезесі -->
+<div id="modal" class="ov soft hidden"><div class="card" style="text-align:left">
+  <h2 id="mTitle"></h2><p style="margin-top:8px" id="mText"></p>
+  <div class="row" style="justify-content:flex-end"><button class="btn btn-outline" id="mNo"></button><button class="btn btn-primary" id="mYes"></button></div>
+</div></div>
+<div class="toasts" id="toasts"></div>
 
-      <section class="card login-card">
-        <h2 data-i18n="login.title">Платформаға кіру</h2>
-        <p class="lead" data-i18n="login.lead"></p>
+<script>
+/* Apps Script Web App сілтемесі */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwZS0DBIij4jkWg3Uw2BvzUIQVU4NKuaS-topQbNKEA8vah_sCO2B4xYRsGnd62s8hi/exec';
 
-        <div id="closedBanner" class="alert info hidden" style="margin-bottom:16px">
-          <i data-lucide="clock"></i><span data-i18n="login.closed"></span>
-        </div>
+/* Қатысушылар тізімі (кіру беті серверді күтпей ашылуы үшін) */
+const NAMES = [["Жүніс Ерлан Төсбайұлы","Әкімшілік","Сарапшы","Администрация","Эксперт"],["Нургожаева Ляззат Ондасыновна","Қаржы-экономикалық қызметі","Бас бухгалтер","Финансово-экономическая служба","Главный бухгалтер"],["Мухаметжанова Ай-Сауле Курмашовна","Қаржы-экономикалық қызметі","Бірінші дәрежелі жоғары деңгейлі бухгалтер","Финансово-экономическая служба","Бухгалтер высшего уровня квалификации первой категории"],["Кенесбек Динара Кенесбековна","Қаржы-экономикалық қызметі","Заңгер","Финансово-экономическая служба","Юрист"],["Темірханқызы Айжаным","Қаржы-экономикалық қызметі","Дәрежесіз жоғары деңгейлі мемлекеттік сатып алулар бойынша маман","Финансово-экономическая служба","Специалист по государственным закупкам высшего уровня квалификации без категории"],["Бердығалиева Гүлдана Нұрболқызы","Ұйымдастыру-аналитикалық жұмыстар қызметі","Бірінші дәрежелі жоғары деңгейлі кітапханашы","Служба организационно-аналитической работы","Библиотекарь высшего уровня квалификации первой категории"],["Байсмакова Айгерим Мухан","Ақпараттық ресурстар қызметі","Бірінші дәрежелі жоғары деңгейлі кітапханашы","Служба информационных ресурсов","Библиотекарь высшего уровня квалификации первой категории"],["Курманжанова Акбота Кадиржановна","Ақпараттық ресурстар қызметі","Бірінші дәрежелі жоғары деңгейлі кітапханашы","Служба информационных ресурсов","Библиотекарь высшего уровня квалификации первой категории"],["Марат Мадина Берікқызы","Ақпараттық ресурстар қызметі","Дәрежесіз жоғары деңгейлі кітапханашы","Служба информационных ресурсов","Библиотекарь высшего уровня квалификации без категории"],["Мукушева Кундыз Кайратовна","Ақпараттық ресурстар қызметі","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Служба информационных ресурсов","Библиотекарь высшего уровня квалификации высшей категории"],["Айтжанова Аяулым Бакытжановна","Цифрлық технологиялар","Топ жетекшісі","Цифровые технологии","Руководитель группы"],["Султанбекова Аяулым Жамбулқызы","Цифрлық технологиялар","Дәрежесіз жоғары деңгейлі көшірме-көбейту машиналарының программисі","Цифровые технологии","Программист копировально-множительных машин высшего уровня квалификации без категории"],["Смагулова Гаухар Олжакуловна","Қорларды сақтау қызметі","Топ жетекшісі","Служба хранения фондов","Руководитель группы"],["Ахметова Макпал Асылбековна","«Қазақстан кітаптары» қызметі","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Служба «Книги Казахстана»","Библиотекарь высшего уровня квалификации высшей категории"],["Шекербекова Райхан Кашкиновна","«Қазақстан кітаптары» қызметі","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Служба «Книги Казахстана»","Библиотекарь высшего уровня квалификации высшей категории"],["Карлова Елена Юрьевна","Әлем әдебиеті","Бірінші дәрежелі жоғары деңгейлі кітапханашы","Мировая литература","Библиотекарь высшего уровня квалификации первой категории"],["Кудайбергенова Ляззат Мукашовна","Әлем әдебиеті","Дәрежесіз жоғары деңгейлі кітапханашы","Мировая литература","Библиотекарь высшего уровня квалификации без категории"],["Акимбекова Перизат Тухтарджановна","Мерзімді басылымдар қызметі","Топ жетекшісі","Служба периодических изданий","Руководитель группы"],["Тажибаева Гульхан Шалдаровна","Мерзімді басылымдар қызметі","Топ жетекшісі","Служба периодических изданий","Руководитель группы"],["Кулмуханбетова Роза Баглановна","Анықтамалық-ақпараттық қызмет көрсету қызметі","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Служба справочно-информационного обслуживания","Библиотекарь высшего уровня квалификации высшей категории"],["Садыхан Толғанай Ерқанатқызы","Ақпарат және коммуникациялар қызметі","Дәрежесіз жоғары деңгейлі кітапханашы","Служба информации и коммуникаций","Библиотекарь высшего уровня квалификации без категории"],["Агыманова Багиля Амантаевна","Ғылыми-әдістемелік қызмет","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Научно-методическая служба","Библиотекарь высшего уровня квалификации высшей категории"],["Бекмұханбет Айбала Қанатбайқызы","Ғылыми-әдістемелік қызмет","Екінші дәрежелі жоғары деңгейлі кітапханашы","Научно-методическая служба","Библиотекарь высшего уровня квалификации второй категории"],["Жұмахан Нұрлыхан Қасымханқызы","Ғылыми-әдістемелік қызмет","Дәрежесіз жоғары деңгейлі кітапханашы","Научно-методическая служба","Библиотекарь высшего уровня квалификации без категории"],["Суленова Гулзахира Турсынбаевна","Ғылыми-әдістемелік қызмет","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Научно-методическая служба","Библиотекарь высшего уровня квалификации высшей категории"],["Байгонусова Галия Уалхановна","Ұлттық библиография қызметі","Жоғары дәрежелі жоғары деңгейлі библиограф","Служба национальной библиографии","Библиограф высшего уровня квалификации высшей категории"],["Рахимова Айбарша Айдаровна","Ұлттық библиография қызметі","Бірінші дәрежелі жоғары деңгейлі библиограф","Служба национальной библиографии","Библиограф высшего уровня квалификации первой категории"],["Абикова Гульшат Масалимовна","Сирек кітаптар мен қолжазбалар қызметі","Қызмет жетекшісі","Служба редких книг и рукописей","Руководитель службы"],["Біләл Ертай Нұрбекұлы","Сирек кітаптар мен қолжазбалар қызметі","Дәрежесіз жоғары деңгейлі кітапханашы","Служба редких книг и рукописей","Библиотекарь высшего уровня квалификации без категории"],["Узынжасова Гульнар Шелекбаевна","Консервация, қалпына келтіру және түптеу қызметі","Жоғары дәрежелі жоғары деңгейлі кітапханашы","Служба консервации, реставрации и переплёта","Библиотекарь высшего уровня квалификации высшей категории"],["Раджабқызы Әсел","Көрмелер және мәдени бағдарламалар қызметі","Дәрежесіз жоғары деңгейлі кітапханашы","Служба выставок и культурных программ","Библиотекарь высшего уровня квалификации без категории"],["Даутбек Аслан Дауренулы","Компьютерлік және желілік қамтамасыз ету қызметі","Дәрежесіз орта деңгейлі программист","Служба компьютерного и сетевого обеспечения","Программист среднего уровня квалификации без категории"],["Керимов Самир Пириевич","Компьютерлік және желілік қамтамасыз ету қызметі","Дәрежесіз жоғары деңгейлі инженер-программист","Служба компьютерного и сетевого обеспечения","Инженер-программист высшего уровня квалификации без категории"],["Габдолова Элеонора Таргыновна","Баспа қызметі","Екінші дәрежелі жоғары деңгейлі кітапханашы","Издательская служба","Библиотекарь высшего уровня квалификации второй категории"],["Ақытай Алмас Нұрланұлы","Техникалық-пайдалану қызметі","Дәрежесіз орта деңгейлі инженер-сантехник","Служба технической эксплуатации","Инженер-сантехник среднего уровня квалификации без категории"],["Әжі Ерсін Маратұлы","Техникалық-пайдалану қызметі","Дәрежесіз орта деңгейлі инженер-сантехник","Служба технической эксплуатации","Инженер-сантехник среднего уровня квалификации без категории"],["Ісебай Жақсылық Жеңісұлы","Техникалық-пайдалану қызметі","Дәрежесіз орта деңгейлі инженер-электрик","Служба технической эксплуатации","Инженер-электрик среднего уровня квалификации без категории"],["Қашқынбай Мақсат Кәдірбайұлы","Техникалық-пайдалану қызметі","Дәрежесіз орта деңгейлі инженер-сантехник","Служба технической эксплуатации","Инженер-сантехник среднего уровня квалификации без категории"],["Қыдырбай Думан Серікұлы","Техникалық-пайдалану қызметі","Бірінші дәрежелі жоғары деңгейлі инженер-электрик","Служба технической эксплуатации","Инженер-электрик высшего уровня квалификации первой категории"],["Наканұлы Дамир","Техникалық-пайдалану қызметі","Дәрежесіз орта деңгейлі инженер-электрик","Служба технической эксплуатации","Инженер-электрик среднего уровня квалификации без категории"],["Давлетпаков Иртыш Чингилбаевич","Техникалық-пайдалану қызметі","Күзетші","Служба технической эксплуатации","Сторож"],["Есимханова Молдир Еркиновна","Ғимаратқа қызмет көрсету қызметі","Қойма меңгерушісі","Служба обслуживания здания","Заведующий складом"]];
+</script>
+<script>
+'use strict';
+/* ============================ Мәтіндер (қаз/орыс) ============================ */
+const DICT = {
+kz: {
+'app.org':'ҚР Ұлттық кітапханасы','app.sub':'Қызметкерлерді аттестаттау · 22–23 қазан 2026','top.proctor':'Бақылау қосулы',
+'mobile.title':'Аттестацияны тек компьютерден тапсыруға болады','mobile.text':'Платформаны компьютерде, Google Chrome браузерінде ашыңыз.',
+'tab.title':'Платформа басқа қойындыда ашық','tab.text':'Бұл қойындыны жабыңыз. Аттестацияны тек бір қойындыда тапсыруға болады.',
+'login.title':'Платформаға кіру','login.lead':'Аты-жөніңізді жаза бастаңыз да, тізімнен таңдап, «Кіру» батырмасын басыңыз.',
+'login.name':'Аты-жөні','login.ph':'Тегіңізді немесе атыңызды жаза бастаңыз','login.hint':'Кемінде 2 әріп жазып, тізімнен таңдаңыз',
+'login.none':'Сәйкес келетін ат табылмады','login.dept':'Қызметі немесе бөлімі','login.pos':'Лауазымы','login.org':'Мекеме',
+'login.btn':'Кіру','login.wait':'Кіру… (бірнеше секунд)','login.closed':'Аттестация әлі басталған жоқ. Проктордың белгісін күтіңіз.',
+'err.session_closed':'Аттестация әлі басталған жоқ.','err.bad_name':'Бұл атпен қатысушы табылмады.','err.no_session':'Сессия аяқталды. Қайта кіріңіз.',
+'err.network':'Сервермен байланыс жоқ. Қайталап көріңіз.','err.server_error':'Сервер қатесі. Қайталап көріңіз.','err.busy':'Сервер бос емес. Қайталап көріңіз.',
+'err.bad_pin':'PIN қате.','err.pin_blocked':'Қате әрекет тым көп. 2 минуттан кейін қайталаңыз.','err.halted':'Сессия тоқтатылған.',
+'err.deadline':'Уақыт аяқталды.','err.stage_closed':'Бұл кезең жабық.','err.not_setup':'Платформа әлі бапталмаған.','err.unknown':'Белгісіз қате.',
+'rules.title':'Аттестация ережелері','rules.st1':'1-кезең: 5 ситуациялық және практикалық тапсырма — {m} минут.',
+'rules.st2':'2-кезең: кәсіби тест, {n} сұрақ — {m} минут.',
+'rules.r1':'Аттестация толық экран режимінде өтеді. Толық экраннан шықсаңыз, экран құлыпталады.',
+'rules.r2':'Басқа қойындыға, бағдарламаға немесе терезеге өтуге, бетті жаңартуға және жабуға болмайды.',
+'rules.r3':'Көшіру, қою, тышқанның оң батырмасы, басып шығару бұғатталған және тіркеледі.',
+'rules.r4':'Құлыпты тек залдағы проктор аша алады. Таймер құлып кезінде тоқтамайды.',
+'rules.r5':'{max}-ші құлыптаудан кейін сессия тоқтатылады, шешімді комиссия қабылдайды.',
+'rules.r6':'Қосымша монитор ажыратылған болуы керек. Платформаны тек бір қойындыда ашыңыз.',
+'rules.r7':'Жауаптар автоматты түрде сақталады.',
+'rules.agree':'Ережелермен таныстым және келісемін','rules.start':'Толық экранда бастау','rules.starting':'Дайындалуда…',
+'rules.monitor':'Қосымша мониторды ажыратыңыз.','rules.fsFail':'Толық экран режимін қосу мүмкін болмады. Қайталап көріңіз.',
+'s1.title':'1-кезең: Ситуациялық және практикалық тапсырмалар','s1.task':'Тапсырма {n}','s1.crit':'Бағалау критерийлері (0–5 балл):',
+'s1.ph':'Жауабыңызды осында жазыңыз…','s1.counter':'Сөз: {w} / {max} · Таңба: {c}','s1.min':'Ең аз: {min} сөз','s1.limit':'Сөз шегіне жеттіңіз',
+'s1.saved':'Сақталды {t}','s1.saving':'Сақталуда…','s1.unsaved':'Сақталмаған өзгерістер бар','s1.saveErr':'Сақталмады, қайта әрекет жасалады',
+'s1.prev':'← Алдыңғы','s1.next':'Келесі →','s1.finish':'1-кезеңді аяқтау','s1.finishHint':'Әр тапсырмаға кемінде {min} сөз жазыңыз.',
+'s1.confirmTitle':'1-кезеңді аяқтайсыз ба?','s1.confirmText':'Аяқтағаннан кейін жауаптарды өзгертуге болмайды. Тест басталады.',
+'s1.timeUp':'Уақыт аяқталды. Жауаптар жіберілді.',
+'s2.title':'2-кезең: Кәсіби тест','s2.intro':'Тест ҚР Ұлттық кітапханасы туралы және лауазымыңызға сай кәсіби сұрақтардан тұрады. Бір экранда бір сұрақ. Уақыт біткенде тест автоматты түрде жіберіледі.',
+'s2.meta':'{n} сұрақ · {m} минут','s2.start':'Тестті бастау','s2.q':'Сұрақ {n} / {t}','s2.flag':'Кейін қараймын',
+'s2.prev':'← Алдыңғы','s2.next':'Келесі →','s2.finish':'Тестті аяқтау','s2.confirmTitle':'Тестті аяқтайсыз ба?',
+'s2.confirmText':'Жауап берілмеген сұрақтар: {n}. Аяқтағаннан кейін өзгертуге болмайды.','s2.timeUp':'Уақыт аяқталды. Тест жіберілді.',
+'res.title':'Аттестация аяқталды','res.score':'{t} сұрақтың {c}-на дұрыс жауап бердіңіз.','res.review':'Сіздің жауаптарыңыз',
+'res.ok':'Дұрыс жауап','res.bad':'Қате жауап','res.none':'Жауап берілмеген','res.note':'Жазбаша тапсырмаларды комиссия бағалайды.','res.exit':'Шығу',
+'lock.title':'Экран құлыпталды','lock.text':'Сіз аттестация терезесінен шықтыңыз. Жалғастыру үшін прокторды шақырыңыз.',
+'lock.type':'Бұзушылық','lock.time':'Уақыты','lock.count':'Ескерту: {n} / {max}','lock.pin':'Проктор PIN','lock.unlock':'Ашу',
+'lock.note':'Таймер тоқтамайды. Жауаптарыңыз сақталды.','halt.title':'Сессия тоқтатылды',
+'halt.text':'Құлыптау саны шекке жетті. Жауаптарыңыз сақталды. Комиссия шешімін күтіңіз.',
+'fs.title':'Толық экранға оралыңыз','fs.text':'Жалғастыру үшін толық экран режимін қосыңыз.','fs.btn':'Толық экранға өту',
+'toast.blocked':'Бұл әрекетке тыйым салынған. Ол тіркелді.','toast.unlocked':'Құлып ашылды',
+'btn.cancel':'Бас тарту','btn.ok':'Растау',
+'v.hidden':'Басқа қойындыға немесе бағдарламаға өту','v.blur':'Терезеден фокустың кетуі','v.fullscreen':'Толық экраннан шығу',
+'v.resize':'Терезе кішірейді','v.unload':'Бетті жаңарту немесе жабу','v.devtools':'Әзірлеуші құралдары','v.monitor':'Қосымша монитор'
+},
+ru: {
+'app.org':'Национальная библиотека РК','app.sub':'Аттестация сотрудников · 22–23 октября 2026','top.proctor':'Наблюдение включено',
+'mobile.title':'Аттестацию можно пройти только с компьютера','mobile.text':'Откройте платформу на компьютере в браузере Google Chrome.',
+'tab.title':'Платформа открыта в другой вкладке','tab.text':'Закройте эту вкладку. Аттестацию можно проходить только в одной вкладке.',
+'login.title':'Вход на платформу','login.lead':'Начните вводить ФИО, выберите себя из списка и нажмите «Войти».',
+'login.name':'ФИО','login.ph':'Начните вводить фамилию или имя','login.hint':'Введите не менее 2 букв и выберите из списка',
+'login.none':'Совпадений не найдено','login.dept':'Служба или отдел','login.pos':'Должность','login.org':'Учреждение',
+'login.btn':'Войти','login.wait':'Вход… (несколько секунд)','login.closed':'Аттестация ещё не началась. Дождитесь сигнала проктора.',
+'err.session_closed':'Аттестация ещё не началась.','err.bad_name':'Участник с таким ФИО не найден.','err.no_session':'Сессия завершена. Войдите снова.',
+'err.network':'Нет связи с сервером. Повторите попытку.','err.server_error':'Ошибка сервера. Повторите попытку.','err.busy':'Сервер занят. Повторите попытку.',
+'err.bad_pin':'Неверный PIN.','err.pin_blocked':'Слишком много попыток. Повторите через 2 минуты.','err.halted':'Сессия остановлена.',
+'err.deadline':'Время истекло.','err.stage_closed':'Этот этап закрыт.','err.not_setup':'Платформа ещё не настроена.','err.unknown':'Неизвестная ошибка.',
+'rules.title':'Правила аттестации','rules.st1':'Этап 1: 5 ситуационных и практических заданий — {m} мин.',
+'rules.st2':'Этап 2: профессиональный тест, {n} вопросов — {m} мин.',
+'rules.r1':'Аттестация проходит в полноэкранном режиме. При выходе из него экран блокируется.',
+'rules.r2':'Нельзя переходить на другую вкладку, программу или окно, обновлять или закрывать страницу.',
+'rules.r3':'Копирование, вставка, правая кнопка мыши и печать заблокированы и фиксируются.',
+'rules.r4':'Снять блокировку может только проктор в зале. Таймер во время блокировки не останавливается.',
+'rules.r5':'После {max}-й блокировки сессия останавливается, решение принимает комиссия.',
+'rules.r6':'Дополнительный монитор должен быть отключён. Открывайте платформу только в одной вкладке.',
+'rules.r7':'Ответы сохраняются автоматически.',
+'rules.agree':'С правилами ознакомлен(а) и согласен(на)','rules.start':'Начать в полноэкранном режиме','rules.starting':'Подготовка…',
+'rules.monitor':'Отключите дополнительный монитор.','rules.fsFail':'Не удалось включить полноэкранный режим. Повторите попытку.',
+'s1.title':'Этап 1: Ситуационные и практические задания','s1.task':'Задание {n}','s1.crit':'Критерии оценки (0–5 баллов):',
+'s1.ph':'Напишите ваш ответ здесь…','s1.counter':'Слов: {w} / {max} · Символов: {c}','s1.min':'Минимум: {min} слов','s1.limit':'Достигнут лимит слов',
+'s1.saved':'Сохранено {t}','s1.saving':'Сохранение…','s1.unsaved':'Есть несохранённые изменения','s1.saveErr':'Не сохранено, будет повторная попытка',
+'s1.prev':'← Назад','s1.next':'Далее →','s1.finish':'Завершить этап 1','s1.finishHint':'Напишите не менее {min} слов в каждом задании.',
+'s1.confirmTitle':'Завершить этап 1?','s1.confirmText':'После завершения изменить ответы нельзя. Начнётся тест.',
+'s1.timeUp':'Время истекло. Ответы отправлены.',
+'s2.title':'Этап 2: Профессиональный тест','s2.intro':'Тест состоит из вопросов о Национальной библиотеке РК и профессиональных вопросов по вашей должности. На экране один вопрос. По истечении времени тест отправляется автоматически.',
+'s2.meta':'{n} вопросов · {m} мин','s2.start':'Начать тест','s2.q':'Вопрос {n} / {t}','s2.flag':'Вернуться позже',
+'s2.prev':'← Назад','s2.next':'Далее →','s2.finish':'Завершить тест','s2.confirmTitle':'Завершить тест?',
+'s2.confirmText':'Вопросов без ответа: {n}. После завершения изменить нельзя.','s2.timeUp':'Время истекло. Тест отправлен.',
+'res.title':'Аттестация завершена','res.score':'Вы правильно ответили на {c} из {t} вопросов.','res.review':'Ваши ответы',
+'res.ok':'Верный ответ','res.bad':'Неверный ответ','res.none':'Нет ответа','res.note':'Письменные задания оценивает комиссия.','res.exit':'Выйти',
+'lock.title':'Экран заблокирован','lock.text':'Вы покинули окно аттестации. Чтобы продолжить, позовите проктора.',
+'lock.type':'Нарушение','lock.time':'Время','lock.count':'Предупреждение: {n} / {max}','lock.pin':'PIN проктора','lock.unlock':'Открыть',
+'lock.note':'Таймер не останавливается. Ваши ответы сохранены.','halt.title':'Сессия остановлена',
+'halt.text':'Достигнут предел блокировок. Ваши ответы сохранены. Ожидайте решения комиссии.',
+'fs.title':'Вернитесь в полноэкранный режим','fs.text':'Чтобы продолжить, включите полноэкранный режим.','fs.btn':'Полный экран',
+'toast.blocked':'Это действие запрещено. Оно зафиксировано.','toast.unlocked':'Блокировка снята',
+'btn.cancel':'Отмена','btn.ok':'Подтвердить',
+'v.hidden':'Переход на другую вкладку или программу','v.blur':'Потеря фокуса окна','v.fullscreen':'Выход из полноэкранного режима',
+'v.resize':'Уменьшение окна','v.unload':'Обновление или закрытие страницы','v.devtools':'Инструменты разработчика','v.monitor':'Дополнительный монитор'
+}};
+let LANG = 'kz';
+try { LANG = localStorage.getItem('nlrk_lang') === 'ru' ? 'ru' : 'kz'; } catch (e) {}
+function T(k, v) { let s = DICT[LANG][k] || DICT.kz[k] || k; if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]); return s; }
+function TO(k) { const o = LANG === 'kz' ? 'ru' : 'kz'; return DICT[o][k] || k; }
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function applyLang() {
+  document.documentElement.lang = LANG === 'ru' ? 'ru' : 'kk';
+  document.querySelectorAll('[data-t]').forEach(e => { e.textContent = T(e.dataset.t); });
+  document.querySelectorAll('[data-ph]').forEach(e => { e.placeholder = T(e.dataset.ph); });
+  document.querySelectorAll('[data-tt]').forEach(e => { e.title = T(e.dataset.tt); });
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
+  $('#lockAlt').textContent = TO('lock.text');
+}
 
-        <form id="loginForm" autocomplete="off" novalidate>
-          <div class="field">
-            <label for="nameInput" data-i18n="f.name"></label>
-            <input id="nameInput" class="input" type="text" autocomplete="off" spellcheck="false"
-                   data-i18n-ph="f.name.ph" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="acList">
-            <div id="acList" class="ac-list hidden" role="listbox"></div>
-            <span class="hint" data-i18n="f.name.hint"></span>
-          </div>
+/* ============================ Сервер ============================ */
+const store = {
+  get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} }
+};
+function mkErr(code, extra) { const e = new Error(code); e.code = code; return Object.assign(e, extra || {}); }
+async function api(action, data) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 30000);
+  try {
+    const res = await fetch(API_URL, { method: 'POST', redirect: 'follow', cache: 'no-store', signal: ctl.signal,
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action: action, token: store.get('tok') }, data || {})) });
+    let j;
+    try { j = await res.json(); } catch (e) { throw mkErr('server_error'); }
+    if (!j.ok) throw mkErr(j.error || 'unknown', j);
+    return j;
+  } catch (e) { if (e && e.code) throw e; throw mkErr('network'); }
+  finally { clearTimeout(timer); }
+}
+function beacon(action, data) {
+  try { navigator.sendBeacon(API_URL, new Blob([JSON.stringify(Object.assign({ action: action, token: store.get('tok') }, data || {}))], { type: 'text/plain;charset=utf-8' })); } catch (e) {}
+}
+function errText(e) { const k = 'err.' + ((e && e.code) || 'unknown'); const s = T(k); return s === k ? T('err.unknown') : s; }
+function toast(msg, kind) {
+  const d = document.createElement('div'); d.className = 'toast ' + (kind || ''); d.textContent = msg;
+  $('#toasts').appendChild(d); setTimeout(() => d.remove(), 3500);
+}
+function modal(title, text, okText) {
+  return new Promise(res => {
+    $('#mTitle').textContent = title; $('#mText').textContent = text;
+    $('#mYes').textContent = okText || T('btn.ok'); $('#mNo').textContent = T('btn.cancel');
+    $('#modal').classList.remove('hidden');
+    const done = v => { $('#modal').classList.add('hidden'); $('#mYes').onclick = $('#mNo').onclick = null; res(v); };
+    $('#mYes').onclick = () => done(true); $('#mNo').onclick = () => done(false);
+  });
+}
+const words = t => { t = String(t || '').trim(); return t ? t.split(/\s+/).length : 0; };
+const hhmm = d => new Date(d).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+function fmtLeft(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = String(s % 60).padStart(2, '0');
+  return h ? h + ':' + String(m).padStart(2, '0') + ':' + ss : String(m).padStart(2, '0') + ':' + ss;
+}
 
-          <div class="field">
-            <label for="deptInput" data-i18n="f.dept"></label>
-            <input id="deptInput" class="input" type="text" readonly tabindex="-1" data-i18n-ph="f.auto">
-          </div>
+/* ============================ Прокторинг ============================
+ * ШЕКТЕУ: браузер басқа бағдарламаларды толық көре алмайды және телефонды байқамайды.
+ * Сондықтан платформа залдағы проктормен бірге қолданылады. */
+const P = {
+  armed: false, locked: false, halted: false, wasFs: false, base: null, blurT: null, allowLeave: false, warns: {}, sentUnload: false,
+  isFs() { return !!document.fullscreenElement; },
+  extended() { return !!(window.screen && window.screen.isExtended === true); },
+  trigger(type) {
+    if (!this.armed || this.locked || this.halted) return;
+    this.locked = true; clearTimeout(this.blurT);
+    this.showLock({ type: type, at: Date.now() }, (S.st ? S.st.locks : 0) + 1, S.st ? S.st.maxLocks : 3);
+    App.onLock(type);
+  },
+  warn(type, e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (!this.armed) return;
+    this.warns[type] = (this.warns[type] || 0) + 1;
+    toast(T('toast.blocked'), 'warn');
+  },
+  flush() {
+    Object.keys(this.warns).forEach(t => { const n = this.warns[t]; delete this.warns[t]; api('violation', { severity: 'warn', type: t, detail: '×' + n }).catch(() => {}); });
+  },
+  showLock(info, n, max) {
+    this.locked = true; this.info = { type: info && info.type || 'hidden', at: info && info.at || Date.now(), n: n, max: max };
+    this.renderLock();
+    $('#fsOv').classList.add('hidden'); $('#lockOv').classList.remove('hidden'); $('#pinErr').classList.add('hidden');
+    setTimeout(() => { try { $('#pinInput').focus(); } catch (e) {} }, 50);
+  },
+  renderLock() {
+    const L = this.info; if (!L) return;
+    $('#lockType').textContent = T('v.' + L.type); $('#lockTime').textContent = new Date(L.at).toLocaleTimeString('ru-RU');
+    $('#lockCount').textContent = T('lock.count', { n: L.n, max: L.max });
+  },
+  hideLock() { this.locked = false; this.info = null; $('#lockOv').classList.add('hidden'); $('#pinInput').value = ''; },
+  showHalt() { this.halted = true; this.locked = true; $('#lockOv').classList.add('hidden'); $('#fsOv').classList.add('hidden'); $('#haltOv').classList.remove('hidden'); },
+  hideHalt() { this.halted = false; this.locked = false; $('#haltOv').classList.add('hidden'); },
+  showFs() { if (this.isFs() || this.locked || this.halted) return; $('#fsErr').classList.add('hidden'); $('#fsOv').classList.remove('hidden'); },
+  async enterFs() {
+    if (this.isFs()) return true;
+    try {
+      await Promise.race([document.documentElement.requestFullscreen({ navigationUI: 'hide' }), new Promise((_, rej) => setTimeout(() => rej(0), 4000))]);
+      this.wasFs = this.isFs(); return this.wasFs;
+    } catch (e) { return false; }
+  },
+  exitFs() { this.wasFs = false; if (this.isFs()) document.exitFullscreen().catch(() => {}); },
+  bind() {
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') this.trigger('hidden'); });
+    window.addEventListener('blur', () => {
+      if (!this.armed || this.locked) return;
+      clearTimeout(this.blurT); this.blurT = setTimeout(() => { if (!document.hasFocus()) this.trigger('blur'); }, 1000);
+    });
+    window.addEventListener('focus', () => clearTimeout(this.blurT));
+    document.addEventListener('fullscreenchange', () => {
+      if (this.isFs()) { this.wasFs = true; setTimeout(() => { this.base = { w: innerWidth, h: innerHeight }; }, 600); $('#fsOv').classList.add('hidden'); }
+      else if (this.wasFs) { this.wasFs = false; this.trigger('fullscreen'); }
+    });
+    window.addEventListener('resize', () => {
+      if (this.armed && !this.locked && this.base && (innerWidth < this.base.w * 0.8 || innerHeight < this.base.h * 0.8)) this.trigger('resize');
+    });
+    document.addEventListener('keydown', e => {
+      const ctrl = e.ctrlKey || e.metaKey, c = e.code;
+      if (e.key === 'F12' || (ctrl && e.shiftKey && /Key[IJC]/.test(c)) || (e.metaKey && e.altKey && /Key[IJC]/.test(c)) || (ctrl && c === 'KeyU')) {
+        e.preventDefault(); this.trigger('devtools'); return;
+      }
+      if (this.armed && (e.key === 'F5' || (ctrl && c === 'KeyR'))) { e.preventDefault(); this.trigger('unload'); return; }
+      if (this.armed && ctrl && c === 'KeyP') return this.warn('print', e);
+      if (this.armed && ctrl && c === 'KeyS') return this.warn('save', e);
+    }, true);
+    document.addEventListener('keyup', e => { if (e.key === 'PrintScreen') { this.warn('printscreen'); try { navigator.clipboard.writeText(''); } catch (x) {} } }, true);
+    ['copy', 'cut', 'paste'].forEach(ev => document.addEventListener(ev, e => this.warn(ev, e), true));
+    document.addEventListener('contextmenu', e => this.warn('contextmenu', e), true);
+    document.addEventListener('dragstart', e => this.warn('drag', e), true);
+    document.addEventListener('drop', e => this.warn('drag', e), true);
+    document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a'); if (a) { e.preventDefault(); this.warn('link'); } }, true);
+    window.addEventListener('beforeunload', e => { if (!this.armed || this.allowLeave) return; this.trigger('unload'); e.preventDefault(); e.returnValue = ''; });
+    window.addEventListener('pagehide', () => {
+      if (!this.armed || this.allowLeave || this.sentUnload) return;
+      this.sentUnload = true; App.beaconSave(); beacon('violation', { severity: 'lock', type: 'unload' });
+    });
+    if (window.screen && window.screen.addEventListener) window.screen.addEventListener('change', () => { if (this.extended()) this.trigger('monitor'); });
+    setInterval(() => { if (this.armed && this.extended()) this.trigger('monitor'); }, 5000);
+    setInterval(() => this.flush(), 10000);
+    $('#pinForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const pin = $('#pinInput').value.trim(); if (!pin) return;
+      $('#pinBtn').disabled = true; $('#pinErr').classList.add('hidden');
+      try { await App.unlock(pin); }
+      catch (x) { $('#pinErr').textContent = errText(x); $('#pinErr').classList.remove('hidden'); $('#pinInput').select(); }
+      finally { $('#pinBtn').disabled = false; }
+    });
+    $('#pinInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); });
+    $('#fsBtn').addEventListener('click', async () => {
+      if (await this.enterFs()) $('#fsOv').classList.add('hidden');
+      else { $('#fsErr').textContent = T('rules.fsFail'); $('#fsErr').classList.remove('hidden'); }
+    });
+  },
+  // Бір қойынды
+  single() {
+    return new Promise(res => {
+      if (!('BroadcastChannel' in window)) return res(true);
+      const ch = new BroadcastChannel('nlrk-attest'), id = Math.random().toString(36).slice(2);
+      let dup = false;
+      ch.onmessage = e => { const m = e.data || {}; if (m.id === id) return; if (m.t === 'hello' && !dup) ch.postMessage({ t: 'here', id }); if (m.t === 'here') dup = true; };
+      ch.postMessage({ t: 'hello', id }); setTimeout(() => res(!dup), 400);
+    });
+  }
+};
 
-          <div class="field">
-            <label for="posInput" data-i18n="f.pos"></label>
-            <input id="posInput" class="input" type="text" readonly tabindex="-1" data-i18n-ph="f.auto">
-          </div>
+/* ============================ Күй ============================ */
+const S = {
+  st: null, offset: 0, view: '', tasks: [], answers: {}, ver1: {}, dirty1: new Set(), cur1: 0, lastValid: '', caret: 0, lastSaved: null,
+  qs: [], choices: {}, ver2: {}, dirty2: new Set(), cur2: 0, flags: new Set(), result: null,
+  queue: Promise.resolve(), ticking: false, finishing: false, pendingLock: null, lastLockAt: 0, shownLock: '', s2t: null
+};
 
-          <div class="field">
-            <label for="orgInput" data-i18n="f.org"></label>
-            <input id="orgInput" class="input" type="text" readonly tabindex="-1">
-          </div>
+/* ============================ Қосымша ============================ */
+const FOLD = { 'ә': 'а', 'ө': 'о', 'ү': 'у', 'ұ': 'у', 'қ': 'к', 'ғ': 'г', 'ң': 'н', 'і': 'и', 'һ': 'х', 'ё': 'е', 'й': 'и' };
+const norm = s => String(s || '').toLowerCase().replace(/[әөүұқғңіһёй]/g, c => FOLD[c]).replace(/[^a-zа-я0-9\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+const LETTERS = 'АБВГ';
 
-          <div id="loginError" class="alert error hidden" style="margin-bottom:16px">
-            <i data-lucide="triangle-alert"></i><span></span>
-          </div>
+const App = {
+  async init() {
+    applyLang();
+    document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
+      LANG = b.dataset.lang; try { localStorage.setItem('nlrk_lang', LANG); } catch (e) {}
+      applyLang(); P.renderLock(); this.render(true);
+    }));
+    const ua = navigator.userAgent;
+    if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || Math.max(screen.width, screen.height) < 1024) {
+      return this.message('mobile');
+    }
+    P.bind();
+    if (!(await P.single())) { beacon('violation', { severity: 'warn', type: 'multitab' }); return this.message('tab'); }
+    setInterval(() => this.tick(), 15000);
+    setInterval(() => { if (P.locked || P.halted) this.tick(); }, 5000);
+    setInterval(() => this.clock(), 1000);
+    if (store.get('tok')) {
+      $('#view').innerHTML = '<div class="loading">…</div>';
+      try { this.load(await api('state', { full: true }), Date.now()); }
+      catch (e) { if (e.code === 'no_session') store.set('tok', null); this.showLogin(); }
+    } else this.showLogin();
+  },
+  message(kind) {
+    $('#msgTitle').textContent = T(kind + '.title'); $('#msgText').textContent = T(kind + '.text');
+    $('#msgOv').classList.remove('hidden');
+  },
 
-          <button id="loginBtn" type="submit" class="btn btn-primary btn-block" disabled>
-            <i data-lucide="log-out" style="transform:scaleX(-1)"></i><span data-i18n="login.btn">Кіру</span>
-          </button>
-        </form>
-        <p class="login-foot" data-i18n="login.footer"></p>
-      </section>
-    </main>
-  </div>
+  /* ---------- Кіру ---------- */
+  showLogin() {
+    S.view = 'login'; S.st = null;
+    $('#who').classList.add('hidden'); $('#timer').classList.add('hidden');
+    let list = NAMES.map(a => ({ name: a[0], dept_kz: a[1], position_kz: a[2], dept_ru: a[3], position_ru: a[4] }));
+    let sel = null, hits = [], idx = -1;
+    const field = (x, k) => (LANG === 'ru' ? x[k + '_ru'] : x[k + '_kz']) || x[k + '_kz'] || '';
+    $('#view').innerHTML = '<div class="card login"><h2>' + esc(T('login.title')) + '</h2><p class="muted" style="margin:6px 0 18px">' + esc(T('login.lead')) + '</p>' +
+      '<div id="closed" class="alert info hidden">' + esc(T('login.closed')) + '</div>' +
+      '<form id="lf" autocomplete="off"><div class="field"><label>' + esc(T('login.name')) + '</label><input id="nm" class="input" spellcheck="false" placeholder="' + esc(T('login.ph')) + '"><div id="ac" class="ac hidden"></div><span class="hint">' + esc(T('login.hint')) + '</span></div>' +
+      '<div class="field"><label>' + esc(T('login.dept')) + '</label><input id="dp" class="input" readonly tabindex="-1"></div>' +
+      '<div class="field"><label>' + esc(T('login.pos')) + '</label><input id="ps" class="input" readonly tabindex="-1"></div>' +
+      '<div class="field"><label>' + esc(T('login.org')) + '</label><input class="input" readonly tabindex="-1" value="' + esc(T('app.org')) + '"></div>' +
+      '<div id="le" class="alert err hidden"></div><button class="btn btn-primary btn-block" id="lb" disabled>' + esc(T('login.btn')) + '</button></form></div>';
+    const nm = $('#nm'), ac = $('#ac');
+    const fill = () => { $('#dp').value = sel ? field(sel, 'dept') : ''; $('#ps').value = sel ? field(sel, 'position') : ''; $('#lb').disabled = !sel; };
+    const close = () => ac.classList.add('hidden');
+    const pick = x => { sel = x; nm.value = x.name; fill(); close(); $('#lb').focus(); };
+    const draw = () => {
+      ac.innerHTML = hits.length ? hits.map((x, i) => '<div class="' + (i === idx ? 'on' : '') + '" data-i="' + i + '"><b>' + esc(x.name) + '</b><small>' + esc(field(x, 'dept')) + '</small></div>').join('')
+        : '<div>' + esc(T('login.none')) + '</div>';
+      ac.querySelectorAll('[data-i]').forEach(d => d.addEventListener('mousedown', e => { e.preventDefault(); pick(hits[+d.dataset.i]); }));
+      ac.classList.remove('hidden');
+    };
+    nm.addEventListener('input', () => {
+      sel = null; fill();
+      const q = norm(nm.value); if (q.replace(/[\s-]/g, '').length < 2) return close();
+      const parts = q.split(' ');
+      hits = list.filter(x => { const w = norm(x.name).split(/[\s-]/); return parts.every(p => w.some(y => y.indexOf(p) === 0)); }).slice(0, 8);
+      idx = hits.length ? 0 : -1; draw();
+    });
+    nm.addEventListener('keydown', e => {
+      if (ac.classList.contains('hidden') || !hits.length) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); idx = (idx + 1) % hits.length; draw(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); idx = (idx - 1 + hits.length) % hits.length; draw(); }
+      else if (e.key === 'Enter') { e.preventDefault(); pick(hits[idx]); }
+    });
+    nm.addEventListener('blur', () => setTimeout(close, 150));
+    $('#lf').addEventListener('submit', async e => {
+      e.preventDefault(); if (!sel) return;
+      const lb = $('#lb'); lb.disabled = true; lb.textContent = T('login.wait'); $('#le').classList.add('hidden');
+      try {
+        const r = await api('login', { name: sel.name });
+        store.set('tok', r.token);
+        this.load(r, Date.now());
+      } catch (x) {
+        if (x.code === 'session_closed') $('#closed').classList.remove('hidden');
+        $('#le').textContent = errText(x); $('#le').classList.remove('hidden');
+        lb.disabled = false; lb.textContent = T('login.btn');
+      }
+    });
+    nm.focus();
+    // Серверді «ояту» және тізімді жаңарту
+    api('names').then(r => {
+      if (r.list && r.list.length) list = r.list;
+      $('#closed') && $('#closed').classList.toggle('hidden', !!r.sessionOpen);
+    }).catch(() => {});
+  },
 
-  <div id="mobileBlock" class="mobile-block hidden">
-    <div class="card overlay-card">
-      <div class="chip lg c-amber"><i data-lucide="triangle-alert"></i></div>
-      <h2 data-i18n="mobile.title"></h2>
-      <p class="msg-alt" data-i18n="mobile.text"></p>
-    </div>
-  </div>
+  /* ---------- Күйді қолдану ---------- */
+  load(r, sentAt) {
+    if (r.tasks) { S.tasks = r.tasks; r.tasks.forEach(t => { if (!S.dirty1.has(t.id)) S.answers[t.id] = t.text || ''; }); }
+    if (r.questions) { S.qs = r.questions; r.questions.forEach(q => { if (!S.dirty2.has(q.n)) S.choices[q.n] = q.choice; }); }
+    if (r.result) S.result = r.result;
+    this.apply(r.state, sentAt);
+  },
+  apply(st, sentAt) {
+    if (!st) return;
+    S.st = st; S.offset = st.now - Date.now();
+    $('#who').classList.remove('hidden'); $('#whoName').textContent = st.fullName;
+    $('#whoPos').textContent = (LANG === 'ru' ? st.position_ru : st.position_kz) || '';
+    const active = !!st.stage1.start && !st.stage2.end;
+    document.body.classList.toggle('exam', active);
+    $('#proctorOn').classList.toggle('hidden', !active);
+    if (st.halted) { P.armed = false; P.showHalt(); }
+    else {
+      if (P.halted) P.hideHalt();
+      if (active) {
+        P.armed = true;
+        if (st.locked) {
+          const sig = st.locks + ':' + (st.lockInfo ? st.lockInfo.at : '');
+          if (!P.locked || S.shownLock !== sig) { P.showLock(st.lockInfo, st.locks, st.maxLocks); S.shownLock = sig; }
+        } else if (P.locked) {
+          if (!S.pendingLock && sentAt > S.lastLockAt) { P.hideLock(); S.shownLock = ''; toast(T('toast.unlocked'), 'ok'); if (!P.isFs()) P.showFs(); }
+        } else if (!P.isFs()) P.showFs();
+      } else {
+        P.armed = false; $('#fsOv').classList.add('hidden'); if (P.locked) P.hideLock();
+      }
+    }
+    let v = 'rules';
+    if (st.stage2.end) v = 'result';
+    else if (st.stage2.start) v = 'stage2';
+    else if (st.stage1.end) v = 'intro2';
+    else if (st.stage1.start) v = 'stage1';
+    if (v !== S.view) { S.view = v; this.render(true); window.scrollTo(0, 0); }
+    this.clock();
+  },
+  render(force) {
+    if (!force) return;
+    const v = S.view;
+    if (v === 'login') return this.showLogin();
+    if (v === 'rules') return this.renderRules();
+    if (v === 'stage1') return this.renderS1();
+    if (v === 'intro2') return this.renderIntro2();
+    if (v === 'stage2') return this.renderS2();
+    if (v === 'result') return this.renderResult();
+  },
 
-  <div class="toast-host" id="toastHost"></div>
+  /* ---------- Сервермен алмасу ---------- */
+  serial(fn) { const p = S.queue.then(() => fn()); S.queue = p.catch(() => {}); return p; },
+  stageActive(k) { const s = S.st && S.st['stage' + k]; return !!(s && s.start && !s.end); },
+  async tick() {
+    if (S.ticking || !S.st || !store.get('tok')) return;
+    S.ticking = true;
+    try {
+      await this.serial(async () => {
+        if (S.pendingLock) await this.sendLock();
+        const sentAt = Date.now();
+        let r;
+        if (this.stageActive(1) && S.dirty1.size) r = await this.save1();
+        else if (this.stageActive(2) && S.dirty2.size) r = await this.save2();
+        else r = await api('state');
+        if (r && r.state) this.apply(r.state, sentAt);
+      });
+    } catch (e) { this.handleErr(e); }
+    finally { S.ticking = false; }
+  },
+  handleErr(e) {
+    if (!e) return;
+    if (e.code === 'no_session') { P.armed = false; store.set('tok', null); this.showLogin(); }
+    else if (e.code === 'deadline' || e.code === 'stage_closed') {
+      S.dirty1.clear(); S.dirty2.clear();
+      api('state', { full: true }).then(r => this.load(r, Date.now())).catch(() => {});
+    }
+  },
+  async save1() {
+    const ids = Array.from(S.dirty1); if (!ids.length) return null;
+    const vers = ids.map(id => S.ver1[id]); this.saveState('saving');
+    try {
+      const r = await api('save1', { answers: ids.map(id => ({ taskId: id, text: S.answers[id] || '' })) });
+      ids.forEach((id, i) => { if (S.ver1[id] === vers[i]) S.dirty1.delete(id); });
+      S.lastSaved = new Date(); this.saveState(S.dirty1.size ? 'unsaved' : 'ok'); return r;
+    } catch (e) { this.saveState('err'); throw e; }
+  },
+  async save2() {
+    const ns = Array.from(S.dirty2); if (!ns.length) return null;
+    const vers = ns.map(n => S.ver2[n]);
+    const r = await api('save2', { answers: ns.map(n => ({ n: n, choice: S.choices[n] })) });
+    ns.forEach((n, i) => { if (S.ver2[n] === vers[i]) S.dirty2.delete(n); });
+    return r;
+  },
+  beaconSave() {
+    if (this.stageActive(1) && S.dirty1.size) beacon('save1', { answers: Array.from(S.dirty1).map(id => ({ taskId: id, text: S.answers[id] || '' })) });
+    if (this.stageActive(2) && S.dirty2.size) beacon('save2', { answers: Array.from(S.dirty2).map(n => ({ n: n, choice: S.choices[n] })) });
+  },
+  onLock(type) {
+    S.lastLockAt = Date.now();
+    S.pendingLock = { type: type, stage: this.stageActive(1) ? 1 : this.stageActive(2) ? 2 : '', item: this.stageActive(1) ? 'task ' + (S.cur1 + 1) : 'q ' + (S.cur2 + 1) };
+    if (type === 'unload') { this.beaconSave(); beacon('violation', Object.assign({ severity: 'lock' }, S.pendingLock)); }
+    this.serial(async () => {
+      if (this.stageActive(1) && S.dirty1.size) await this.save1().catch(() => {});
+      if (this.stageActive(2) && S.dirty2.size) await this.save2().catch(() => {});
+      await this.sendLock();
+    }).catch(e => this.handleErr(e));
+  },
+  async sendLock() {
+    const v = S.pendingLock; if (!v) return;
+    const sentAt = Date.now();
+    const r = await api('violation', Object.assign({ severity: 'lock' }, v));
+    if (S.pendingLock === v) S.pendingLock = null;
+    this.apply(r.state, sentAt);
+  },
+  async unlock(pin) {
+    const sentAt = Date.now();
+    const r = await this.serial(async () => { if (S.pendingLock) await this.sendLock(); return api('unlock', { pin: pin }); });
+    this.apply(r.state, sentAt);
+  },
+  clock() {
+    const st = S.st, tm = $('#timer');
+    const k = this.stageActive(2) ? 2 : this.stageActive(1) ? 1 : 0;
+    if (!st || !k) { tm.classList.add('hidden'); return; }
+    const left = st['stage' + k].deadline - (Date.now() + S.offset);
+    tm.classList.remove('hidden'); $('#timerText').textContent = fmtLeft(left);
+    tm.classList.toggle('warn', left < 600000 && left >= 300000); tm.classList.toggle('danger', left < 300000);
+    if (left <= 0 && !S.finishing && !st.halted) { if (k === 1) this.finish1(true); else this.finish2(true); }
+  },
 
-  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
-  <script src="config.js"></script>
-  <script src="names.js"></script>
-  <script src="i18n.js"></script>
-  <script src="app.js"></script>
+  /* ---------- Ережелер ---------- */
+  renderRules() {
+    const st = S.st, c = st.cfg;
+    $('#view').innerHTML = '<div class="card"><h2>' + esc(T('rules.title')) + '</h2>' +
+      '<p style="margin-top:12px"><b>' + esc(T('rules.st1', { m: c.stage1Minutes })) + '</b><br><b>' + esc(T('rules.st2', { n: c.testCount, m: c.stage2Minutes })) + '</b></p>' +
+      '<ul class="rules">' + ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7'].map(k => '<li>' + esc(T('rules.' + k, { max: c.maxLocks })) + '</li>').join('') + '</ul>' +
+      '<label class="agree"><input type="checkbox" id="ag">' + esc(T('rules.agree')) + '</label>' +
+      '<div id="re" class="alert err hidden"></div><button class="btn btn-primary" id="sb" disabled>' + esc(T('rules.start')) + '</button></div>';
+    $('#ag').addEventListener('change', e => { $('#sb').disabled = !e.target.checked; });
+    $('#sb').addEventListener('click', async () => {
+      const fail = m => { $('#re').textContent = m; $('#re').classList.remove('hidden'); $('#sb').disabled = false; $('#sb').textContent = T('rules.start'); };
+      $('#re').classList.add('hidden');
+      if (P.extended()) return fail(T('rules.monitor'));
+      $('#sb').disabled = true; $('#sb').textContent = T('rules.starting');
+      if (!(await P.enterFs())) return fail(T('rules.fsFail'));
+      try { const sentAt = Date.now(); this.load(await this.serial(() => api('start1')), sentAt); }
+      catch (e) { P.exitFs(); fail(errText(e)); }
+    });
+  },
+
+  /* ---------- 1-кезең ---------- */
+  title(t) { const f = (LANG === 'ru' ? t.title_ru : t.title_kz) || ''; const k = f.indexOf(':'); return k > 0 ? f.slice(k + 1).trim() : (f || T('s1.task', { n: t.no })); },
+  renderS1() {
+    if (!S.tasks.length) { $('#view').innerHTML = '<div class="loading">…</div>'; return; }
+    if (S.cur1 >= S.tasks.length) S.cur1 = 0;
+    const t = S.tasks[S.cur1], c = S.st.cfg, crit = LANG === 'ru' ? t.criteria_ru : t.criteria_kz;
+    $('#view').innerHTML = '<div class="card"><h2>' + esc(T('s1.title')) + '</h2>' +
+      '<div class="steps" id="steps" style="margin-top:14px"></div>' +
+      '<h3>' + esc(T('s1.task', { n: S.cur1 + 1 }) + ' · ' + this.title(t)) + '</h3>' +
+      '<div class="task">' + esc(LANG === 'ru' ? t.ru : t.kz) + '</div>' +
+      (crit ? '<div class="crit"><b>' + esc(T('s1.crit')) + '</b>\n' + esc(crit) + '</div>' : '') +
+      '<textarea class="ans" id="ta" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" placeholder="' + esc(T('s1.ph')) + '"></textarea>' +
+      '<div class="meta"><span id="ctr"></span><span id="sv"></span></div>' +
+      '<div class="row"><button class="btn btn-outline" id="pv">' + esc(T('s1.prev')) + '</button><button class="btn btn-outline" id="nx">' + esc(T('s1.next')) + '</button>' +
+      '<span class="sp"></span><span class="small muted" id="fh"></span><button class="btn btn-primary" id="f1">' + esc(T('s1.finish')) + '</button></div></div>';
+    const ta = $('#ta');
+    ta.value = S.answers[t.id] || ''; S.lastValid = ta.value;
+    ta.addEventListener('beforeinput', () => { S.caret = ta.selectionStart; });
+    ta.addEventListener('input', () => {
+      if (words(ta.value) > c.wordLimit) { ta.value = S.lastValid; ta.selectionStart = ta.selectionEnd = Math.min(S.caret, ta.value.length); toast(T('s1.limit'), 'warn'); }
+      else S.lastValid = ta.value;
+      if (S.answers[t.id] !== ta.value) { S.answers[t.id] = ta.value; S.ver1[t.id] = (S.ver1[t.id] || 0) + 1; S.dirty1.add(t.id); this.saveState('unsaved'); }
+      this.updS1();
+    });
+    $('#pv').disabled = S.cur1 === 0; $('#nx').disabled = S.cur1 === S.tasks.length - 1;
+    $('#pv').addEventListener('click', () => { S.cur1--; this.renderS1(); });
+    $('#nx').addEventListener('click', () => { S.cur1++; this.renderS1(); });
+    $('#f1').addEventListener('click', () => this.finish1(false));
+    this.updS1(); this.saveState(S.dirty1.size ? 'unsaved' : S.lastSaved ? 'ok' : '');
+    ta.focus(); ta.selectionStart = ta.selectionEnd = ta.value.length;
+  },
+  updS1() {
+    const c = S.st.cfg, t = S.tasks[S.cur1], txt = S.answers[t.id] || '', w = words(txt);
+    const ctr = $('#ctr'); if (!ctr) return;
+    ctr.textContent = T('s1.counter', { w: w, max: c.wordLimit, c: txt.length }) + ' · ' + T('s1.min', { min: c.minWords });
+    ctr.className = w >= c.wordLimit ? 'over' : w >= c.minWords ? 'ok' : '';
+    $('#steps').innerHTML = S.tasks.map((x, i) => '<button class="step' + (i === S.cur1 ? ' on' : '') + (words(S.answers[x.id]) >= c.minWords ? ' done' : '') + '" data-i="' + i + '">' +
+      (words(S.answers[x.id]) >= c.minWords ? '✓ ' : '') + (i + 1) + '</button>').join('');
+    $('#steps').querySelectorAll('.step').forEach(b => b.addEventListener('click', () => { S.cur1 = +b.dataset.i; this.renderS1(); }));
+    const all = S.tasks.every(x => words(S.answers[x.id]) >= c.minWords);
+    $('#f1').disabled = !all; $('#fh').textContent = all ? '' : T('s1.finishHint', { min: c.minWords });
+  },
+  saveState(s) {
+    const el = $('#sv'); if (!el) return;
+    el.style.color = s === 'ok' ? 'var(--green)' : s === 'err' ? 'var(--red)' : '';
+    el.textContent = s === 'ok' ? T('s1.saved', { t: hhmm(S.lastSaved || new Date()) }) : s === 'saving' ? T('s1.saving') : s === 'err' ? T('s1.saveErr') : s === 'unsaved' ? T('s1.unsaved') : '';
+  },
+  async finish1(auto) {
+    if (S.finishing) return;
+    if (!auto && !(await modal(T('s1.confirmTitle'), T('s1.confirmText'), T('s1.finish')))) return;
+    S.finishing = true;
+    try {
+      const sentAt = Date.now();
+      const r = await this.serial(() => api('finish1', { answers: S.tasks.map(t => ({ taskId: t.id, text: S.answers[t.id] || '' })) }));
+      S.dirty1.clear(); this.apply(r.state, sentAt);
+      if (auto) toast(T('s1.timeUp'), 'warn');
+    } catch (e) { toast(errText(e), 'warn'); this.handleErr(e); }
+    finally { S.finishing = false; }
+  },
+
+  /* ---------- 2-кезең ---------- */
+  renderIntro2() {
+    const c = S.st.cfg;
+    $('#view').innerHTML = '<div class="card"><h2>' + esc(T('s2.title')) + '</h2><p style="margin:12px 0">' + esc(T('s2.intro')) + '</p>' +
+      '<p><b>' + esc(T('s2.meta', { n: c.testCount, m: c.stage2Minutes })) + '</b></p>' +
+      '<div class="row"><button class="btn btn-primary" id="s2b">' + esc(T('s2.start')) + '</button></div></div>';
+    $('#s2b').addEventListener('click', async e => {
+      e.currentTarget.disabled = true;
+      try { const sentAt = Date.now(); this.load(await this.serial(() => api('start2')), sentAt); S.cur2 = 0; this.render(true); }
+      catch (x) { toast(errText(x), 'warn'); e.currentTarget.disabled = false; }
+    });
+  },
+  renderS2() {
+    if (!S.qs.length) { $('#view').innerHTML = '<div class="loading">…</div>'; return; }
+    if (S.cur2 >= S.qs.length) S.cur2 = 0;
+    const q = S.qs[S.cur2];
+    $('#view').innerHTML = '<div class="card"><div class="row" style="margin-top:0"><h3>' + esc(T('s2.q', { n: S.cur2 + 1, t: S.qs.length })) + '</h3><span class="sp"></span>' +
+      '<button class="btn btn-outline flag' + (S.flags.has(q.n) ? ' on' : '') + '" id="fl">⚑ ' + esc(T('s2.flag')) + '</button></div>' +
+      '<div class="q">' + esc(LANG === 'ru' ? q.ru : q.kz) + '</div>' +
+      q.options.map((o, i) => '<button class="opt' + (S.choices[q.n] === i ? ' sel' : '') + '" data-i="' + i + '"><b>' + LETTERS[i] + '</b><span>' + esc(LANG === 'ru' ? o.ru : o.kz) + '</span></button>').join('') +
+      '<div class="row"><button class="btn btn-outline" id="pv">' + esc(T('s2.prev')) + '</button><button class="btn btn-outline" id="nx">' + esc(T('s2.next')) + '</button>' +
+      '<span class="sp"></span><button class="btn btn-primary" id="f2">' + esc(T('s2.finish')) + '</button></div>' +
+      '<div class="grid" id="grid"></div></div>';
+    document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+      S.choices[q.n] = +b.dataset.i; S.ver2[q.n] = (S.ver2[q.n] || 0) + 1; S.dirty2.add(q.n);
+      document.querySelectorAll('.opt').forEach(x => x.classList.toggle('sel', x === b)); this.grid();
+      clearTimeout(S.s2t); S.s2t = setTimeout(() => this.serial(() => this.save2()).catch(e => this.handleErr(e)), 2000);
+    }));
+    $('#fl').addEventListener('click', () => { S.flags.has(q.n) ? S.flags.delete(q.n) : S.flags.add(q.n); $('#fl').classList.toggle('on'); this.grid(); });
+    $('#pv').disabled = S.cur2 === 0; $('#nx').disabled = S.cur2 === S.qs.length - 1;
+    $('#pv').addEventListener('click', () => { S.cur2--; this.renderS2(); });
+    $('#nx').addEventListener('click', () => { S.cur2++; this.renderS2(); });
+    $('#f2').addEventListener('click', () => this.finish2(false));
+    this.grid();
+  },
+  grid() {
+    $('#grid').innerHTML = S.qs.map((q, i) => '<button class="' + (S.choices[q.n] >= 0 ? 'a ' : '') + (S.flags.has(q.n) ? 'f ' : '') + (i === S.cur2 ? 'cur' : '') + '" data-i="' + i + '">' + (i + 1) + '</button>').join('');
+    $('#grid').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { S.cur2 = +b.dataset.i; this.renderS2(); }));
+  },
+  async finish2(auto) {
+    if (S.finishing) return;
+    const left = S.qs.filter(q => !(S.choices[q.n] >= 0)).length;
+    if (!auto && !(await modal(T('s2.confirmTitle'), T('s2.confirmText', { n: left }), T('s2.finish')))) return;
+    S.finishing = true; clearTimeout(S.s2t);
+    try {
+      const sentAt = Date.now();
+      const r = await this.serial(() => api('finish2', { answers: S.qs.map(q => ({ n: q.n, choice: S.choices[q.n] == null ? -1 : S.choices[q.n] })) }));
+      S.dirty2.clear(); this.load(r, sentAt); P.exitFs();
+      if (auto) toast(T('s2.timeUp'), 'warn');
+    } catch (e) { toast(errText(e), 'warn'); this.handleErr(e); }
+    finally { S.finishing = false; }
+  },
+
+  /* ---------- Нәтиже ---------- */
+  renderResult() {
+    const r = S.result || { correct: 0, total: S.qs.length };
+    const rev = S.qs.map((q, i) => '<div class="qn">' + (i + 1) + '. ' + esc(LANG === 'ru' ? q.ru : q.kz) + '</div>' +
+      (q.choice < 0 ? '<span class="na">' + esc(T('res.none')) + '</span>' : '') +
+      q.options.map((o, j) => {
+        const cls = j === q.choice ? (q.ok ? ' good' : ' bad') : '';
+        return '<div class="opt ro' + cls + '"><b>' + LETTERS[j] + '</b><span>' + esc(LANG === 'ru' ? o.ru : o.kz) + '</span></div>';
+      }).join('')).join('');
+    $('#view').innerHTML = '<div class="card" style="text-align:center"><h2>' + esc(T('res.title')) + '</h2>' +
+      '<div class="score">' + r.correct + ' / ' + r.total + '</div><p><b>' + esc(T('res.score', { c: r.correct, t: r.total })) + '</b></p>' +
+      '<p class="muted small" style="margin-top:6px">' + esc(T('res.note')) + '</p>' +
+      '<div class="row" style="justify-content:center"><button class="btn btn-outline" id="ex">' + esc(T('res.exit')) + '</button></div></div>' +
+      '<div class="card rev"><h3>' + esc(T('res.review')) + '</h3><div class="legend"><span><i style="background:var(--green)"></i>' + esc(T('res.ok')) +
+      '</span><span><i style="background:var(--red)"></i>' + esc(T('res.bad')) + '</span></div>' + rev + '</div>';
+    $('#ex').addEventListener('click', () => { P.armed = false; P.allowLeave = true; store.set('tok', null); S.result = null; S.qs = []; S.tasks = []; this.showLogin(); });
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
 </body>
 </html>
